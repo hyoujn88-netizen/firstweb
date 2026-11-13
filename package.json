@@ -1,0 +1,11 @@
+{
+  "name": "firstweb",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
