@@ -1,0 +1,16 @@
+# ==========================================
+# Netlify 배포 설정 (netlify.toml)
+# ==========================================
+
+[build]
+  # 배포할 폴더: public 폴더 안의 내용만 인터넷에 공개돼요
+  publish = "public"
+
+  # 서버 기능(카카오 로그인 처리 등)을 넣을 폴더
+  # 이 폴더의 코드는 공개되지 않고 Netlify 서버에서만 실행돼요
+  functions = "netlify/functions"
+
+[dev]
+  # 내 컴퓨터에서 테스트할 때 쓰는 주소의 포트 번호 (http://localhost:8888)
+  port = 8888
+  publish = "public"

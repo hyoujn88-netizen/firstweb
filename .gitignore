@@ -1,0 +1,42 @@
+# ==========================================
+# GitHub에 올리지 않을 파일 목록 (.gitignore)
+# ==========================================
+
+# --- 비밀 정보 (비밀번호, API 키 등) ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets.*
+
+# --- 윈도우가 자동으로 만드는 파일 ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- 맥(Mac)이 자동으로 만드는 파일 ---
+.DS_Store
+
+# --- 코드 편집기 설정 파일 ---
+.vscode/
+.idea/
+*.swp
+
+# --- Netlify 도구가 내 컴퓨터에 만드는 연결 정보 ---
+.netlify/
+
+# --- Claude Code 개인 설정 ---
+.claude/settings.local.json
+
+# --- 나중에 쓸 수 있는 도구가 만드는 파일 ---
+node_modules/
+dist/
+build/
+*.log
+
+# --- 임시 파일 ---
+*.tmp
+*.bak
+~$*
