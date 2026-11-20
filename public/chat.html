@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>챗봇 | 물리보안 담당</title>
+
+  <!-- 글꼴: Inter Tight(영문·숫자) + Noto Sans KR(한글) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- 모든 페이지가 함께 쓰는 디자인 -->
+  <link rel="stylesheet" href="css/common.css">
+
+  <style>
+    body { background: var(--bg-3rd); }
+
+    /* ===== 채팅 창 전체 ===== */
+    .chat-wrap { padding: 32px 0 48px; }
+    .chat {
+      display: flex;
+      flex-direction: column;
+      height: calc(100dvh - var(--header-height) - 80px);
+      min-height: 520px;
+      max-width: 880px;
+      margin: 0 auto;
+      background: var(--bg-white);
+      border-radius: var(--rounded-xl);
+      box-shadow: var(--shadow-lift);
+      overflow: hidden;
+    }
+    @media (max-width: 760px) {
+      .chat-wrap { padding: 0; }
+      .chat-wrap .container { width: 100%; }
+      .chat { height: calc(100dvh - var(--header-height)); border-radius: 0; min-height: 0; }
+    }
+
+    /* 채팅 창 윗부분 */
+    .chat-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: var(--border-thin) solid var(--border-gray);
+    }
+    .bot-avatar {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, var(--color-awards), var(--color-awards-3));
+      color: var(--color-learn);
+      font-size: 22px;
+    }
+    .bot-avatar::after {          /* 초록 "대화 가능" 점 */
+      content: "";
+      position: absolute;
+      right: -2px;
+      bottom: -2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #3ddc84;
+      border: 2px solid var(--bg-white);
+    }
+    .chat-head h1 { font-size: 17px; font-weight: var(--font-bold); line-height: 1.3; }
+    .chat-head p { font-size: 13px; color: rgba(var(--color-primary-rgb), 0.6); line-height: 1.4; }
+    .btn-new {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 14px;
+      border: var(--border-thin) solid rgba(var(--color-primary-rgb), 0.3);
+      border-radius: 72px;
+      background: var(--bg-white);
+      color: var(--color-primary);
+      font: inherit;
+      font-weight: var(--font-medium);
+      cursor: pointer;
+    }
+    .btn-new:hover { background: var(--bg-primary); }
+    .btn-new .hi { font-size: 16px; }
+
+    /* ===== 대화 내용 ===== */
+    .log {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      scroll-behavior: smooth;
+    }
+    .msg {
+      display: flex;
+      gap: 10px;
+      max-width: 100%;
+      animation: card-in 0.35s var(--ease) both;
+    }
+    .msg.user { justify-content: flex-end; }
+    .msg .bot-avatar { width: 32px; height: 32px; border-radius: 10px; font-size: 16px; }
+    .msg .bot-avatar::after { display: none; }
+    .bubble {
+      max-width: min(640px, 82%);
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 15px;
+      line-height: 1.75;
+      font-weight: var(--font-normal);
+      overflow-wrap: anywhere;
+    }
+    .msg.user .bubble {
+      background: var(--color-awards);
+      color: var(--color-white);
+      border-bottom-right-radius: 6px;
+      white-space: pre-wrap;
+    }
+    .msg.bot .bubble {
+      background: var(--bg-primary);
+      border-top-left-radius: 6px;
+    }
+    .msg.error .bubble {
+      background: #fff1ec;
+      color: #b8401a;
+    }
+
+    /* Claude 답 안의 꾸밈 (굵게, 목록, 코드 등) */
+    .bubble p + p, .bubble p + ul, .bubble p + ol, .bubble ul + p, .bubble ol + p,
+    .bubble pre + p, .bubble p + pre, .bubble h3 + p { margin-top: 10px; }
+    .bubble ul, .bubble ol { padding-left: 20px; margin-top: 6px; }
+    .bubble li + li { margin-top: 2px; }
+    .bubble h3 { font-size: 16px; font-weight: var(--font-bold); margin-top: 12px; }
+    .bubble h3:first-child { margin-top: 0; }
+    .bubble strong { font-weight: var(--font-bold); }
+    .bubble code {
+      padding: 1px 6px;
+      border-radius: var(--rounded-small);
+      background: rgba(var(--color-primary-rgb), 0.08);
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.9em;
+    }
+    .bubble pre {
+      padding: 12px 14px;
+      border-radius: var(--rounded-normal);
+      background: var(--color-primary);
+      color: #f2f2f2;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .bubble pre code { padding: 0; background: none; color: inherit; }
+
+    /* 글자가 써지는 중 표시 (깜박이는 막대) */
+    .typing::after {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 1.1em;
+      margin-left: 2px;
+      vertical-align: -0.2em;
+      background: var(--color-awards);
+      animation: caret 0.9s steps(2) infinite;
+    }
+    @keyframes caret { 50% { opacity: 0; } }
+    /* 첫 글자가 오기 전: 점 세 개 */
+    .dots { display: inline-flex; gap: 4px; padding: 6px 0; }
+    .dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(var(--color-primary-rgb), 0.35);
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .dots span:nth-child(2) { animation-delay: 0.15s; }
+    .dots span:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-6px); } }
+
+    /* ===== 처음 화면 (대화가 없을 때) ===== */
+    .welcome {
+      margin: auto;
+      text-align: center;
+      max-width: 560px;
+      padding: 12px 0;
+    }
+    .welcome .bot-avatar { width: 64px; height: 64px; border-radius: 20px; font-size: 32px; margin-bottom: 16px; }
+    .welcome .bot-avatar::after { display: none; }
+    .welcome h2 { font-size: clamp(22px, 3vw, 28px); font-weight: var(--font-bold); letter-spacing: -0.02em; }
+    .welcome > p { color: rgba(var(--color-primary-rgb), 0.65); margin: 6px 0 24px; }
+    .suggest {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      text-align: left;
+    }
+    .suggest button {
+      padding: 14px 16px;
+      border: var(--border-thin) solid rgba(var(--color-primary-rgb), 0.2);
+      border-radius: var(--rounded-large);
+      background: var(--bg-white);
+      color: var(--color-primary);
+      font: inherit;
+      font-weight: var(--font-medium);
+      line-height: 1.5;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s var(--ease), border-color 0.2s;
+    }
+    .suggest button:hover { background: var(--bg-primary); border-color: var(--color-awards-3); transform: translateY(-2px); }
+    .suggest small { display: block; font-weight: var(--font-normal); color: rgba(var(--color-primary-rgb), 0.55); }
+
+    /* 로그인이 필요할 때 */
+    .gate { margin: auto; text-align: center; max-width: 420px; }
+    .gate .hi { font-size: 44px; margin: 0 auto 12px; color: var(--color-awards); }
+    .gate h2 { font-size: 20px; font-weight: var(--font-bold); margin-bottom: 6px; }
+    .gate p { color: rgba(var(--color-primary-rgb), 0.65); margin-bottom: 20px; }
+
+    /* ===== 입력창 ===== */
+    .composer {
+      padding: 14px 16px 16px;
+      border-top: var(--border-thin) solid var(--border-gray);
+      background: var(--bg-white);
+    }
+    .input-box {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding: 8px 8px 8px 16px;
+      border: 1px solid rgba(var(--color-primary-rgb), 0.18);
+      border-radius: 24px;
+      background: var(--bg-primary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-box:focus-within {
+      border-color: var(--color-awards);
+      box-shadow: 0 0 0 4px rgba(80, 43, 216, 0.12);
+      background: var(--bg-white);
+    }
+    .input-box textarea {
+      flex: 1;
+      min-width: 0;
+      max-height: 180px;
+      padding: 8px 0;
+      border: 0;
+      background: transparent;
+      font: inherit;
+      font-size: 15px;
+      font-weight: var(--font-normal);
+      line-height: 1.6;
+      color: inherit;
+      resize: none;
+      outline: none;
+    }
+    .send {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--color-awards);
+      color: var(--color-white);
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease), background 0.2s, opacity 0.2s;
+    }
+    .send:hover:not(:disabled) { transform: scale(1.06); }
+    .send:disabled { opacity: 0.35; cursor: default; }
+    .send.stop { background: var(--color-primary); }
+    .composer-note {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(var(--color-primary-rgb), 0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 맨 위 메뉴 (모든 페이지 공통) -->
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="./" aria-label="홈으로">
+        <span class="brand-mark" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg></span>
+        <span class="brand-text">물리보안 담당</span>
+      </a>
+      <nav class="site-nav" aria-label="사이트 메뉴">
+        <a class="nav-link" href="./">홈</a>
+        <a class="nav-link" href="about.html">소개</a>
+        <a class="nav-link" href="news.html">뉴스</a>
+        <a class="nav-link" href="region.html">지역</a>
+        <a class="nav-link" href="chat.html" aria-current="page">챗봇</a>
+      </nav>
+      <div class="auth-inner" id="auth" aria-live="polite"></div>
+    </div>
+  </header>
+
+  <main class="chat-wrap">
+    <div class="container">
+      <section class="chat" aria-label="챗봇">
+        <div class="chat-head">
+          <span class="bot-avatar" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z"/></svg></span>
+          <div>
+            <h1>보안 도우미</h1>
+            <p>Claude가 답해 드려요</p>
+          </div>
+          <button type="button" class="btn-new" id="new-chat">
+            <svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+            새 대화
+          </button>
+        </div>
+
+        <div class="log" id="log" aria-live="polite"></div>
+
+        <form class="composer" id="composer">
+          <div class="input-box">
+            <textarea id="input" rows="1" maxlength="4000" placeholder="무엇이든 물어보세요 (Enter 보내기 · Shift+Enter 줄바꿈)" aria-label="메시지 입력"></textarea>
+            <button type="submit" class="send" id="send" aria-label="보내기" disabled></button>
+          </div>
+          <p class="composer-note">AI의 답은 틀릴 수 있어요. 중요한 내용은 꼭 다시 확인하세요.</p>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script>
+    (function () {
+      const log = document.getElementById('log');
+      const form = document.getElementById('composer');
+      const input = document.getElementById('input');
+      const sendBtn = document.getElementById('send');
+      const newBtn = document.getElementById('new-chat');
+      const STORE_KEY = 'chat-history'; // 새로고침해도 대화가 남도록 이 탭에 잠깐 저장해요
+
+      const ICON = {
+        send: '<svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"/></svg>',
+        stop: '<svg class="hi" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>',
+        bot: '<svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"/></svg>',
+        lock: '<svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>',
+      };
+
+      const ERROR_TEXT = {
+        config: '서버 설정이 비어 있어요. .env 파일에 CLAUDE_API_KEY를 넣고 서버를 다시 켜 주세요.',
+        login: '로그인이 풀렸어요. 카카오로 다시 로그인해 주세요.',
+        key: 'Claude API 키가 올바르지 않아요. .env의 CLAUDE_API_KEY 값을 확인해 주세요.',
+        limit: '요청이 너무 많아요. 잠시 후 다시 시도해 주세요.',
+        network: 'Claude 서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.',
+        bad: '메시지를 보낼 수 없어요. 대화가 너무 길면 “새 대화”를 눌러 주세요.',
+        refusal: '이 질문에는 답할 수 없어요. 다른 질문을 해 주세요.',
+        offline: '챗봇은 서버를 실행했을 때만 쓸 수 있어요.',
+      };
+
+      const SUGGESTIONS = [
+        ['물리보안이 뭐예요?', '기술보안·관리보안과 어떻게 달라요?'],
+        ['CCTV 관리할 때 중요한 점', '설치·운영·영상 보관'],
+        ['출입통제 시스템은 어떻게 작동해요?', '카드·지문·얼굴 인식'],
+        ['보안 담당자가 되려면?', '필요한 지식과 자격증'],
+      ];
+
+      let history = [];      // [{ role: 'user' | 'assistant', content: '...' }]
+      let controller = null; // 답을 받는 중이면 "멈춤"에 써요
+      let loggedIn = false;
+
+      function el(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text) node.textContent = text;
+        return node;
+      }
+
+      // ===== Claude 답의 간단한 꾸밈 글자 처리 (**굵게**, `코드`, 목록, 제목) =====
+      // 먼저 모든 글자를 안전하게 바꾼 뒤(escape) 정해진 꾸밈만 HTML로 바꿔요
+      function escapeHtml(s) {
+        return s.replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+      function inline(s) {
+        return escapeHtml(s)
+          .replace(/`([^`]+)`/g, '<code>$1</code>')
+          .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      }
+      function renderMarkdown(text) {
+        const out = [];
+        const parts = text.split(/```[^\n]*\n?/);
+        parts.forEach(function (part, i) {
+          if (i % 2 === 1) { // 코드 블록 안
+            out.push('<pre><code>' + escapeHtml(part.replace(/\n$/, '')) + '</code></pre>');
+            return;
+          }
+          let list = null;
+          const para = [];
+          function flushPara() {
+            if (para.length) out.push('<p>' + para.map(inline).join('<br>') + '</p>');
+            para.length = 0;
+          }
+          function flushList() {
+            if (list) out.push('<' + list.tag + '>' + list.items.map(function (x) { return '<li>' + inline(x) + '</li>'; }).join('') + '</' + list.tag + '>');
+            list = null;
+          }
+          part.split('\n').forEach(function (line) {
+            const ul = line.match(/^\s*[-*•]\s+(.*)/);
+            const ol = line.match(/^\s*\d+[.)]\s+(.*)/);
+            const h = line.match(/^#{1,6}\s+(.*)/);
+            if (ul || ol) {
+              flushPara();
+              const tag = ul ? 'ul' : 'ol';
+              if (!list || list.tag !== tag) { flushList(); list = { tag: tag, items: [] }; }
+              list.items.push((ul || ol)[1]);
+            } else if (h) {
+              flushPara(); flushList();
+              out.push('<h3>' + inline(h[1]) + '</h3>');
+            } else if (!line.trim()) {
+              flushPara(); flushList();
+            } else {
+              flushList();
+              para.push(line);
+            }
+          });
+          flushPara(); flushList();
+        });
+        return out.join('');
+      }
+
+      // ===== 화면 그리기 =====
+      function scrollDown() { log.scrollTop = log.scrollHeight; }
+
+      function addMessage(role, text) {
+        const row = el('div', 'msg ' + (role === 'user' ? 'user' : 'bot'));
+        const bubble = el('div', 'bubble');
+        if (role === 'user') {
+          bubble.textContent = text;
+        } else {
+          const avatar = el('span', 'bot-avatar');
+          avatar.setAttribute('aria-hidden', 'true');
+          avatar.innerHTML = ICON.bot;
+          row.append(avatar);
+          bubble.innerHTML = renderMarkdown(text);
+        }
+        row.append(bubble);
+        log.append(row);
+        scrollDown();
+        return { row: row, bubble: bubble };
+      }
+
+      function addError(text) {
+        const m = addMessage('assistant', '');
+        m.row.classList.add('error');
+        m.bubble.textContent = text;
+      }
+
+      function showWelcome() {
+        log.replaceChildren();
+        const box = el('div', 'welcome');
+        const avatar = el('span', 'bot-avatar');
+        avatar.innerHTML = ICON.bot;
+        avatar.setAttribute('aria-hidden', 'true');
+        box.append(avatar, el('h2', '', '무엇을 도와드릴까요?'), el('p', '', '보안 업무나 이 사이트에 대해 궁금한 것을 물어보세요.'));
+        const grid = el('div', 'suggest');
+        SUGGESTIONS.forEach(function (s) {
+          const b = el('button', '', s[0]);
+          b.type = 'button';
+          b.append(el('small', '', s[1]));
+          b.addEventListener('click', function () { send(s[0]); });
+          grid.append(b);
+        });
+        box.append(grid);
+        log.append(box);
+      }
+
+      function showLoginGate() {
+        log.replaceChildren();
+        const box = el('div', 'gate');
+        box.innerHTML = ICON.lock;
+        box.append(el('h2', '', '로그인이 필요해요'), el('p', '', '챗봇은 카카오로 로그인한 분만 쓸 수 있어요.'));
+        const link = el('a', 'btn-kakao', '카카오 로그인');
+        link.href = '/.netlify/functions/kakao-login';
+        box.append(link);
+        log.append(box);
+        input.disabled = true;
+        input.placeholder = '로그인하면 대화할 수 있어요';
+      }
+
+      function renderHistory() {
+        if (!history.length) return showWelcome();
+        log.replaceChildren();
+        history.forEach(function (m) { addMessage(m.role, m.content); });
+      }
+
+      function save() {
+        try { sessionStorage.setItem(STORE_KEY, JSON.stringify(history)); } catch (e) {}
+      }
+
+      function setBusy(busy) {
+        sendBtn.classList.toggle('stop', busy);
+        sendBtn.innerHTML = busy ? ICON.stop : ICON.send;
+        sendBtn.setAttribute('aria-label', busy ? '답 멈추기' : '보내기');
+        updateSendState();
+      }
+      function updateSendState() {
+        sendBtn.disabled = !controller && (!loggedIn || !input.value.trim());
+      }
+
+      // ===== 메시지 보내기 =====
+      async function send(text) {
+        text = text.trim();
+        if (!text || controller || !loggedIn) return;
+        if (!history.length) log.replaceChildren(); // 처음 화면 지우기
+
+        history.push({ role: 'user', content: text });
+        addMessage('user', text);
+        input.value = '';
+        autoSize();
+
+        const reply = addMessage('assistant', '');
+        reply.bubble.innerHTML = '<span class="dots" aria-label="답을 쓰는 중"><span></span><span></span><span></span></span>';
+
+        controller = new AbortController();
+        setBusy(true);
+        let answer = '';
+        let failed = null;
+
+        try {
+          const res = await fetch('/.netlify/functions/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ messages: history }),
+            signal: controller.signal,
+          });
+          if (!res.ok || !res.body) {
+            const data = await res.json().catch(function () { return {}; });
+            failed = data.error || 'server';
+          } else {
+            // 서버가 한 줄씩 보내는 조각을 받는 대로 화면에 붙여요
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            let buf = '';
+            for (;;) {
+              const r = await reader.read();
+              if (r.done) break;
+              buf += decoder.decode(r.value, { stream: true });
+              let nl;
+              while ((nl = buf.indexOf('\n')) >= 0) {
+                const line = buf.slice(0, nl);
+                buf = buf.slice(nl + 1);
+                if (!line) continue;
+                const ev = JSON.parse(line);
+                if (ev.t === 'text') {
+                  answer += ev.v;
+                  reply.bubble.innerHTML = renderMarkdown(answer);
+                  reply.bubble.classList.add('typing');
+                  scrollDown();
+                } else if (ev.t === 'error') {
+                  failed = ev.code;
+                } else if (ev.t === 'done' && ev.stop === 'refusal') {
+                  failed = 'refusal';
+                } else if (ev.t === 'done' && ev.stop === 'max_tokens') {
+                  answer += '\n\n(답이 너무 길어 여기서 끊겼어요)';
+                }
+              }
+            }
+          }
+        } catch (e) {
+          if (e.name !== 'AbortError') failed = 'offline';
+        }
+
+        reply.bubble.classList.remove('typing');
+        if (answer.trim()) {
+          reply.bubble.innerHTML = renderMarkdown(answer);
+          history.push({ role: 'assistant', content: answer });
+        } else {
+          reply.row.remove();
+          history.pop(); // 답을 못 받은 질문은 대화 기록에서 빼요 (다시 보낼 수 있게)
+          if (!failed) failed = 'stopped';
+        }
+        if (failed === 'stopped') {
+          // 사용자가 직접 멈춘 경우: 질문을 입력창에 되돌려 줘요
+          input.value = text;
+          autoSize();
+          renderHistory();
+        } else if (failed) {
+          addError(ERROR_TEXT[failed] || 'Claude가 답하지 못했어요. 잠시 후 다시 시도해 주세요.');
+          if (failed === 'login') { loggedIn = false; }
+        }
+        save();
+        controller = null;
+        setBusy(false);
+        input.focus();
+      }
+
+      // ===== 입력창 =====
+      function autoSize() {
+        input.style.height = 'auto';
+        input.style.height = Math.min(input.scrollHeight, 180) + 'px';
+        updateSendState();
+      }
+      input.addEventListener('input', autoSize);
+      input.addEventListener('keydown', function (e) {
+        // Enter = 보내기, Shift+Enter = 줄바꿈 (한글 조합 중에는 보내지 않아요)
+        if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+          e.preventDefault();
+          send(input.value);
+        }
+      });
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (controller) controller.abort(); // 답 받는 중이면 "멈춤" 버튼
+        else send(input.value);
+      });
+      newBtn.addEventListener('click', function () {
+        if (controller) controller.abort();
+        history = [];
+        save();
+        if (loggedIn) showWelcome();
+        input.focus();
+      });
+
+      // ===== 시작: 로그인 확인 → 저장된 대화 불러오기 =====
+      setBusy(false);
+      try { history = JSON.parse(sessionStorage.getItem(STORE_KEY) || '[]'); } catch (e) { history = []; }
+      if (!Array.isArray(history)) history = [];
+
+      fetch('/.netlify/functions/me', { cache: 'no-store', credentials: 'same-origin' })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          loggedIn = !!data.loggedIn;
+          if (loggedIn) { renderHistory(); input.focus(); }
+          else showLoginGate();
+          updateSendState();
+        })
+        .catch(function () {
+          log.replaceChildren();
+          addError(ERROR_TEXT.offline);
+        });
+    })();
+  </script>
+
+</body>
+</html>

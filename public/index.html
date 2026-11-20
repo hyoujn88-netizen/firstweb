@@ -3,559 +3,418 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>자기소개 | 물리보안 담당</title>
+  <title>홈 | 물리보안 담당</title>
 
   <!-- 글꼴: Inter Tight(영문·숫자) + Noto Sans KR(한글) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 
+  <!-- 모든 페이지가 함께 쓰는 디자인 -->
+  <link rel="stylesheet" href="css/common.css">
+
   <style>
-    /* ===== 디자인 값 모음 (붙여주신 값 그대로) ===== */
-    :root {
-      --font-1: Inter Tight;
-      --font-light: 300;
-      --font-normal: 400;
-      --font-medium: 500;
-      --font-bold: 600;
-      --font-extrabold: 700;
-      --font-black: 800;
-      --color-primary: #222;
-      --color-primary-rgb: 34, 34, 34;
-      --color-link: #222;
-      --color-white: #fff;
-      --color-white-rgb: 255, 255, 255;
-      --color-orange: #FA5D29;
-      --color-errors: #FA5D29;
-      --color-blue: #49B3FC;
-      --color-featured: #f8f0ee;
-      --color-red: #FA5D29;
-      --color-underlined: var(--color-primary-rgb);
-      --color-connect: #FF602C;
-      --color-connect-2: #FFAE94;
-      --color-connect-3: #FFC5B1;
-      --color-inspire: #AAEEC4;
-      --color-inspire-2: #C8E4D3;
-      --color-inspire-3: #E2F4E9;
-      --color-awards: #502bd8;
-      --color-awards-2: #6749d1;
-      --color-awards-3: #917eda;
-      --color-read: #c0ab3c;
-      --color-read-2: #CDC38B;
-      --color-read-3: #DBD6C0;
-      --color-learn: #FFF083;
-      --color-learn-2: #FFF9D0;
-      --color-learn-3: #fffbe2;
-      --color-jobs: #74bcff;
-      --color-jobs-2: #99ccfc;
-      --color-jobs-3: #b4d7f8;
-      --text-size-small: 11px;
-      --text-size-primary: 14px;
-      --text-size-medium: 18px;
-      --text-size-large: 22px;
-      --border-gray: #ededed;
-      --color-dotteds-rgb: 34, 34, 34;
-      --bg-primary: #F8F8F8;
-      --bg-primary-rgb: 248, 248, 248;
-      --bg-secondary: #222;
-      --bg-3rd: #ededed;
-      --bg-4rd: #f8f8f8;
-      --bg-white: white;
-      --innerWidth: 1816px;
-      --header-height: 71px;
-      --gutter: 20px;
-      --pad-inner: 52px;
-      --color-odd-rows: #f8f8f8;
-      --avatar-bg: #F8F8F8;
-      --border-table: #222;
-      --border-thin: 0.5px;
-      --alert-green: #e0f4d9;
-      --alert-green-rgb: 224, 244, 217;
-      --alert-yellow: #FFF083;
-      --alert-yellow-rgb: 255, 240, 131;
-      --modal-alpha: 0.7;
-      --rounded-small: 4px;
-      --rounded-normal: 8px;
-      --rounded-large: 1rem;
-      --img-resizing-site: 16 / 12;
-      --img-resizing-paronamic: 2 / 1;
-      --img-resizing-desktop: 19 / 10
+    /* ===== 첫 화면 (검은 배경) ===== */
+    .home-hero {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-secondary);
+      color: var(--color-white);
+      padding: 88px 0 96px;
     }
-
-    /* 휴대폰 화면에서는 바깥 여백을 줄임 */
-    @media (max-width: 760px) {
-      :root { --pad-inner: 16px; }
+    /* 배경의 은은한 격자무늬 + 보라·주황 빛 번짐 */
+    .home-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(600px 400px at 85% 10%, rgba(80, 43, 216, 0.45), transparent 70%),
+        radial-gradient(500px 360px at 0% 100%, rgba(250, 93, 41, 0.22), transparent 70%),
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 48px 48px,
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 48px 48px;
+      pointer-events: none;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: var(--font-1), 'Noto Sans KR', sans-serif;
-      font-size: var(--text-size-primary);
-      font-weight: var(--font-light);
-      background: var(--bg-primary);
-      color: var(--color-primary);
-      line-height: 1.8;
-      -webkit-font-smoothing: antialiased;
+    .home-hero .container {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      align-items: center;
+      gap: 56px;
     }
-
-    /* 본문 폭: 너무 넓어지지 않도록 1216px로 제한 */
-    .container {
-      width: min(100% - var(--pad-inner) * 2, 1216px);
-      margin: 0 auto;
-    }
-
-    /* 점선 구분선 (붙여주신 사이트의 점선 스타일) */
-    .dotted {
-      background-image: linear-gradient(to right, rgb(var(--color-dotteds-rgb)) 0 10%, transparent 10%);
-      background-position: bottom;
-      background-size: 8px 1px;
-      background-repeat: repeat-x;
-    }
-
-    /* ===== 맨 위 CCTV 그림 띠 ===== */
-    .cctv-banner {
-      /* 그림의 벽·바닥 색과 같게 해서, 넓은 화면에서 양옆 경계가 안 보이게 */
-      background: linear-gradient(#2e2e2e 205px, #222 205px);
-    }
-    .cctv-banner img {
-      display: block;
-      width: 100%;
-      max-width: 1200px;     /* 원본보다 크게 늘어나 흐려지지 않게 */
-      height: auto;
-      margin: 0 auto;
-    }
-
-    /* ===== 맨 위 소개 영역 ===== */
-    .hero {
-      padding: 60px 0 80px;
-      background: var(--bg-3rd);
-    }
-    .badge {
+    .live {
       display: inline-flex;
       align-items: center;
-      height: 36px;
-      padding: 0 16px;
-      border: var(--border-thin) solid rgba(var(--color-primary-rgb), 0.4);
+      gap: 10px;
+      height: 34px;
+      padding: 0 14px;
       border-radius: 72px;
-      font-size: var(--text-size-primary);
+      background: rgba(var(--color-white-rgb), 0.08);
+      border: var(--border-thin) solid rgba(var(--color-white-rgb), 0.25);
       font-weight: var(--font-medium);
-      margin-bottom: 24px;
+      margin-bottom: 28px;
     }
-    .hero h1 {
-      font-size: clamp(32px, 6vw, 56px);
+    .live-dot {
+      position: relative;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3ddc84;
+    }
+    .live-dot::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      background: #3ddc84;
+      opacity: 0.5;
+      animation: ping 1.8s ease-out infinite;
+    }
+    @keyframes ping { to { transform: scale(2.2); opacity: 0; } }
+
+    .home-hero h1 {
+      font-size: clamp(36px, 5.6vw, 64px);
+      font-weight: var(--font-bold);
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+      margin-bottom: 22px;
+    }
+    .home-hero h1 em {
+      font-style: normal;
+      color: var(--color-orange);
+    }
+    .home-hero .lead {
+      font-size: var(--text-size-medium);
+      color: rgba(var(--color-white-rgb), 0.75);
+      max-width: 520px;
+      margin-bottom: 36px;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    /* CCTV 그림 액자 */
+    .monitor {
+      position: relative;
+      padding: 14px;
+      border-radius: var(--rounded-xl);
+      background: linear-gradient(145deg, #333, #1a1a1a);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(var(--color-white-rgb), 0.08);
+      transform: rotate(-1.5deg);
+      transition: transform 0.5s var(--ease);
+    }
+    .monitor:hover { transform: rotate(0deg) scale(1.01); }
+    .monitor img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+    }
+    .rec {
+      position: absolute;
+      top: 26px;
+      left: 26px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 10px;
+      border-radius: var(--rounded-small);
+      background: rgba(0, 0, 0, 0.6);
+      font-size: var(--text-size-small);
+      font-weight: var(--font-bold);
+      letter-spacing: 1px;
+    }
+    .rec::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff3b30;
+      animation: blink 1s steps(2) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    @media (max-width: 860px) {
+      .home-hero { padding: 56px 0 64px; }
+      .home-hero .container { grid-template-columns: 1fr; gap: 40px; }
+      .monitor { transform: none; }
+    }
+
+    /* ===== 구역 공통 ===== */
+    .home-section { padding: 96px 0 0; }
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 20px;
+      margin-bottom: 32px;
+    }
+    .eyebrow {
+      display: block;
+      font-weight: var(--font-medium);
+      letter-spacing: 1px;
+      color: rgba(var(--color-primary-rgb), 0.6);
+      margin-bottom: 4px;
+    }
+    .section-title {
+      font-size: clamp(26px, 3.6vw, 40px);
       font-weight: var(--font-bold);
       line-height: 1.25;
       letter-spacing: -0.02em;
     }
-    .hero h1 span { color: var(--color-orange); }
-    .hero p {
-      font-size: var(--text-size-medium);
-      max-width: 640px;
-    }
-
-    /* 이미지를 감싸는 어두운 판 (붙여주신 사이트의 box-figure 스타일) */
-    .figure-box {
-      padding: clamp(12px, 2.5vw, 32px);
-      background: var(--bg-secondary);
-      border-radius: var(--rounded-large);
-    }
-    .hero-img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: var(--rounded-normal);
-    }
-    .figure-box.main { margin-bottom: 48px; }
-
-    /* 제목(왼쪽) + 두 번째 이미지(오른쪽) 나란히 */
-    .hero-row {
-      display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      align-items: center;
-      gap: 40px;
-      margin-bottom: 32px;
-    }
-    .hero-row h1 { font-size: clamp(30px, 4vw, 44px); }
-
-    @media (max-width: 760px) {
-      .hero-row { grid-template-columns: 1fr; gap: 24px; }
-      .hero-row h1 { font-size: clamp(30px, 8vw, 40px); }
-    }
-
-    /* ===== 각 구역 공통 ===== */
-    section { padding: 100px 0 0; }
-    .section-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: var(--header-height);
-      margin-bottom: 40px;
-    }
-    .section-label {
-      font-size: var(--text-size-primary);
-      font-weight: var(--font-medium);
-      letter-spacing: 1px;
-    }
-    .section-title {
-      font-size: clamp(26px, 4vw, 50px);
-      font-weight: var(--font-bold);
-      line-height: 1.2;
-      margin-bottom: 16px;
-    }
-    /* 제목 앞 아이콘 */
-    .section-title.with-icon {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .title-icon {
-      flex-shrink: 0;
+    .more-link {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      width: 1.3em;
-      height: 1.3em;
-      border-radius: var(--rounded-large);
-      background: var(--color-awards);   /* 물리보안 카드와 같은 보라색 */
-      color: var(--color-learn);         /* "내 담당"과 같은 노란색 */
-    }
-    .title-icon .hi { width: 0.75em; height: 0.75em; }
-
-    /* Heroicons 아이콘 공통: 글자 크기(font-size)에 맞춰 크기가 정해짐 */
-    .hi { width: 1em; height: 1em; display: block; }
-
-    .section-desc {
-      font-size: var(--text-size-medium);
-      max-width: 640px;
-      margin-bottom: 40px;
-    }
-
-    /* ===== 보안 분야 카드 3개 ===== */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: var(--gutter);
-    }
-    .card {
-      position: relative;
-      background: var(--bg-white);
-      border-radius: var(--rounded-large);
-      padding: 32px;
-    }
-    /* 카드 아이콘: 반투명 둥근 네모 안에 폰트어썸 아이콘 */
-    .card .icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 56px;
-      height: 56px;
-      margin-bottom: 16px;
-      border-radius: var(--rounded-normal);
-      background: rgba(var(--color-white-rgb), 0.6);
-      font-size: 24px;
-    }
-    .card.mine .icon {
-      background: rgba(var(--color-white-rgb), 0.15);
-      color: var(--color-learn);   /* 보라 카드에서는 노란 아이콘 */
-    }
-    .card h3 {
-      font-size: var(--text-size-large);
-      font-weight: var(--font-bold);
-      margin-bottom: 8px;
-    }
-    .card p { font-size: var(--text-size-primary); }
-
-    /* 카드별 색상 (디자인 시스템의 컬러 값 사용) */
-    .card.tech { background: var(--color-jobs-3); }      /* 하늘색 */
-    .card.admin { background: var(--color-inspire); }    /* 연두색 */
-
-    /* 내가 담당하는 분야(물리보안) 카드: 보라색으로 가장 강하게 강조 */
-    .card.mine {
-      background: var(--color-awards);
-      color: var(--color-white);
-    }
-    .card.mine::after {
-      content: "내 담당";
-      position: absolute;
-      top: 24px;
-      right: 24px;
-      background: var(--color-learn);   /* 노란색 */
+      gap: 6px;
       color: var(--color-primary);
-      font-size: var(--text-size-small);
-      font-weight: var(--font-bold);
-      padding: 4px 10px;
-      border-radius: var(--rounded-small);
-    }
-
-    /* ===== 관리 시스템 목록 (점선으로 구분된 줄) ===== */
-    .systems { list-style: none; }
-    .system {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 28px 0;
-    }
-    .system .num {
-      flex-shrink: 0;
-      width: 56px;
-      height: 56px;
-      border-radius: var(--rounded-normal);
-      background: var(--bg-3rd);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 26px;
-    }
-    .system h3 {
-      font-size: var(--text-size-large);
-      font-weight: var(--font-medium);
-    }
-
-    /* ===== 맨 아래 ===== */
-    footer { padding: 100px 0 60px; }
-    footer .container {
-      padding-top: 32px;
-      font-size: var(--text-size-primary);
-      font-weight: var(--font-normal);
-      background-position: top;
-    }
-
-    /* ===== 맨 위 로그인 막대 ===== */
-    .auth-bar {
-      background: var(--bg-white);
-      border-bottom: var(--border-thin) solid var(--border-gray);
-    }
-    .auth-inner {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 12px;
-      min-height: 56px;
-      flex-wrap: wrap;
-    }
-    .auth-user {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: var(--font-medium);
-      min-width: 0;
-    }
-    .auth-user span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .auth-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: var(--avatar-bg);
-      flex-shrink: 0;
-    }
-    /* 카카오 로그인 버튼: 카카오 노란색 */
-    .btn-kakao {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      height: 40px;
-      padding: 0 16px;
-      border-radius: var(--rounded-normal);
-      background: #FEE500;
-      color: rgba(0, 0, 0, 0.85);
-      font: inherit;
       font-weight: var(--font-bold);
       text-decoration: none;
     }
-    .btn-kakao svg { width: 18px; height: 18px; }
-    .btn-logout {
-      height: 36px;
-      padding: 0 14px;
-      border: var(--border-thin) solid rgba(var(--color-primary-rgb), 0.4);
-      border-radius: var(--rounded-normal);
-      background: transparent;
+    .more-link .hi { transition: transform 0.2s var(--ease); }
+    .more-link:hover .hi { transform: translateX(4px); }
+
+    /* ===== 바로가기 큰 카드 2개 ===== */
+    .shortcuts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--gutter);
+    }
+    .shortcut {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 280px;
+      padding: 36px;
+      border-radius: var(--rounded-xl);
+      overflow: hidden;
       color: var(--color-primary);
-      font: inherit;
-      font-weight: var(--font-medium);
-      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
     }
-    .btn-logout:hover { background: var(--bg-primary); }
-    .auth-message {
-      margin-right: auto;
-      color: var(--color-errors);
-      font-weight: var(--font-medium);
+    .shortcut:hover { transform: translateY(-6px); box-shadow: var(--shadow-lift); }
+    .shortcut.about { background: var(--color-awards); color: var(--color-white); }
+    .shortcut.news { background: var(--color-jobs-3); }
+    .shortcut.weather { background: var(--color-inspire); }
+    .shortcut-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      font-size: 26px;
+      margin-bottom: auto;
+      background: rgba(var(--color-white-rgb), 0.6);
     }
+    .shortcut.about .shortcut-icon {
+      background: rgba(var(--color-white-rgb), 0.15);
+      color: var(--color-learn);
+    }
+    .shortcut h3 {
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: var(--font-bold);
+      letter-spacing: -0.02em;
+      margin-top: 48px;
+    }
+    .shortcut p { font-size: 15px; opacity: 0.85; max-width: 360px; }
+    .shortcut-arrow {
+      position: absolute;
+      right: 28px;
+      bottom: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: var(--color-white);
+      font-size: 22px;
+      transition: transform 0.35s var(--ease);
+    }
+    .shortcut.about .shortcut-arrow { background: var(--color-learn); color: var(--color-primary); }
+    .shortcut:hover .shortcut-arrow { transform: rotate(-45deg); }
+    /* 카드 뒤 큰 장식 원 */
+    .shortcut::after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(var(--color-white-rgb), 0.12);
+      transition: transform 0.6s var(--ease);
+    }
+    .shortcut:hover::after { transform: scale(1.25); }
+
+    /* ===== 담당 시스템 칩 ===== */
+    .systems {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--gutter);
+      list-style: none;
+    }
+    .system {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 24px;
+      background: var(--bg-white);
+      border-radius: var(--rounded-large);
+      box-shadow: var(--shadow-soft);
+    }
+    .system-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--color-learn);
+      font-size: 24px;
+    }
+    .system:nth-child(2) .system-icon { background: var(--color-inspire); }
+    .system:nth-child(3) .system-icon { background: var(--color-connect-3); }
+    .system h3 { font-size: 17px; font-weight: var(--font-bold); }
+    .system p { font-size: 13px; color: rgba(var(--color-primary-rgb), 0.6); }
   </style>
 </head>
 <body>
 
-  <!-- 로그인 막대: 내용은 아래 스크립트가 로그인 상태에 맞춰 채워요 -->
-  <div class="auth-bar">
-    <div class="container auth-inner" id="auth" aria-live="polite"></div>
-  </div>
-
-  <!-- 0. 맨 위 CCTV 움직이는 그림 -->
-  <div class="cctv-banner">
-    <img src="images/cctv.gif" alt="CCTV가 빨간 불을 깜박이며 오가는 사람을 감지하는 모습" width="1200" height="240">
-  </div>
-
-  <!-- 1. 소개 -->
-  <header class="hero">
+  <!-- 맨 위 메뉴 (모든 페이지 공통) -->
+  <header class="site-header">
     <div class="container">
-      <div class="badge">현대트랜시스 · 물리보안 담당</div>
-      <div class="figure-box main">
-        <img class="hero-img" src="images/현장 중심의 물리보안 체계.png" alt="현장 중심의 물리보안 체계: 영상감시, 출입통제, 보안 인력, 침입·이상 감지, 시설·자산 보호" width="1752" height="897">
-      </div>
-      <!-- 제목(왼쪽) + 이미지(오른쪽) 나란히 배치 -->
-      <div class="hero-row">
-        <h1>안녕하세요,<br>회사의 <span>안전</span>을 지키는<br>보안 담당자입니다.</h1>
-        <div class="figure-box">
-          <img class="hero-img" src="images/보안과 안전이 함께하는 안심 근무환경.png" alt="보안과 안전이 함께하는 안심 근무환경: 시설보안, 출입통제, 보안관제, 산업안전, 위험감지, 비상대응" width="1752" height="897">
-        </div>
-      </div>
-      <p>현대트랜시스에서 보안 업무를 하고 있습니다. 그중 물리보안을 맡아 CCTV, 출입통제, 주차관리 시스템을 관리합니다.</p>
+      <a class="brand" href="./" aria-label="홈으로">
+        <span class="brand-mark" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg></span>
+        <span class="brand-text">물리보안 담당</span>
+      </a>
+      <nav class="site-nav" aria-label="사이트 메뉴">
+        <a class="nav-link" href="./" aria-current="page">홈</a>
+        <a class="nav-link" href="about.html">소개</a>
+        <a class="nav-link" href="news.html">뉴스</a>
+        <a class="nav-link" href="region.html">지역</a>
+        <a class="nav-link" href="chat.html">챗봇</a>
+      </nav>
+      <div class="auth-inner" id="auth" aria-live="polite"></div>
     </div>
   </header>
 
-  <!-- 2. 회사에서 하는 보안 업무 -->
-  <section>
+  <!-- 1. 첫 화면 -->
+  <section class="home-hero">
     <div class="container">
-      <div class="section-head dotted">
-        <div class="section-label">WHAT WE DO</div>
+      <div>
+        <div class="live"><span class="live-dot" aria-hidden="true"></span>오늘도 안전 근무 중</div>
+        <h1>회사의 <em>안전</em>을 지키는<br>보안 담당자입니다</h1>
+        <p class="lead">현대트랜시스에서 물리보안을 맡아 CCTV, 출입통제, 주차관리 시스템을 관리하고 있습니다.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="about.html">
+            자기소개 보기
+            <svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="news.html">보안 뉴스 보기</a>
+        </div>
       </div>
-      <h2 class="section-title with-icon">
-        <span class="title-icon" aria-hidden="true">
-          <!-- Heroicons: shield-check (체크 표시가 있는 방패) -->
-          <svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
-        </span>
-        우리 팀이 하는 일
-      </h2>
-      <p class="section-desc">보안이라고 하면 경비를 떠올리기 쉽지만, 저희는 기술보안, 물리보안, 관리보안 등 여러 분야를 관리합니다.</p>
-
-      <div class="cards">
-        <div class="card tech">
-          <div class="icon" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25"/></svg></div>
-          <h3>기술보안</h3>
-          <p>기술적인 방법으로 정보와 시스템을 보호합니다.</p>
-        </div>
-        <div class="card mine">
-          <div class="icon" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Zm0 3h.008v.008h-.008v-.008Z"/></svg></div>
-          <h3>물리보안</h3>
-          <p>시설과 장비로 사람과 공간을 보호합니다.</p>
-        </div>
-        <div class="card admin">
-          <div class="icon" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"/></svg></div>
-          <h3>관리보안</h3>
-          <p>규정과 절차로 보안을 관리합니다.</p>
-        </div>
+      <div class="monitor">
+        <span class="rec" aria-hidden="true">REC</span>
+        <img src="images/cctv.gif" alt="CCTV가 빨간 불을 깜박이며 오가는 사람을 감지하는 모습" width="1200" height="240">
       </div>
     </div>
   </section>
 
-  <!-- 3. 내가 관리하는 시스템 -->
-  <section>
-    <div class="container">
-      <div class="section-head dotted">
-        <div class="section-label">MY ROLE</div>
+  <main>
+    <!-- 2. 바로가기 -->
+    <section class="home-section">
+      <div class="container">
+        <div class="section-head dotted">
+          <div>
+            <span class="eyebrow">EXPLORE</span>
+            <h2 class="section-title">어디로 가볼까요?</h2>
+          </div>
+        </div>
+        <div class="shortcuts">
+          <a class="shortcut about" href="about.html">
+            <span class="shortcut-icon" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg></span>
+            <h3>자기소개</h3>
+            <p>우리 팀이 하는 일과 제가 맡고 있는 물리보안 업무를 소개합니다.</p>
+            <span class="shortcut-arrow" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
+          </a>
+          <a class="shortcut news" href="news.html">
+            <span class="shortcut-icon" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z"/></svg></span>
+            <h3>보안 뉴스</h3>
+            <p>보안, CCTV, 출입통제 관련 최신 뉴스를 한곳에서 모아 봅니다.</p>
+            <span class="shortcut-arrow" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
+          </a>
+          <a class="shortcut weather" href="region.html">
+            <span class="shortcut-icon" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 0 0 4.5 4.5H18a3.75 3.75 0 0 0 1.332-7.257 3 3 0 0 0-3.758-3.848 5.25 5.25 0 0 0-10.233 2.33A4.502 4.502 0 0 0 2.25 15Z"/></svg></span>
+            <h3>지역 날씨</h3>
+            <p>지역을 골라 지금 날씨와 5일 예보를 확인합니다.</p>
+            <span class="shortcut-arrow" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></span>
+          </a>
+        </div>
       </div>
-      <h2 class="section-title">제가 관리하는 시스템</h2>
-      <p class="section-desc">물리보안 담당자로서 아래 시스템들을 관리하고 있습니다.</p>
+    </section>
 
-      <ul class="systems">
-        <li class="system dotted">
-          <div class="num" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"/></svg></div>
-          <h3>CCTV 시스템</h3>
-        </li>
-        <li class="system dotted">
-          <div class="num" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z"/></svg></div>
-          <h3>출입통제 시스템</h3>
-        </li>
-        <li class="system dotted">
-          <div class="num" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg></div>
-          <h3>주차관리 시스템</h3>
-        </li>
-      </ul>
-    </div>
-  </section>
+    <!-- 3. 담당 시스템 -->
+    <section class="home-section">
+      <div class="container">
+        <div class="section-head dotted">
+          <div>
+            <span class="eyebrow">MY ROLE</span>
+            <h2 class="section-title">제가 관리하는 시스템</h2>
+          </div>
+        </div>
+        <ul class="systems">
+          <li class="system">
+            <span class="system-icon" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"/></svg></span>
+            <div><h3>CCTV 시스템</h3><p>영상감시</p></div>
+          </li>
+          <li class="system">
+            <span class="system-icon" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z"/></svg></span>
+            <div><h3>출입통제 시스템</h3><p>출입 관리</p></div>
+          </li>
+          <li class="system">
+            <span class="system-icon" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg></span>
+            <div><h3>주차관리 시스템</h3><p>차량·주차 관리</p></div>
+          </li>
+        </ul>
+      </div>
+    </section>
 
-  <footer>
+    <!-- 4. 최신 보안 뉴스 미리보기 -->
+    <section class="home-section">
+      <div class="container">
+        <div class="section-head dotted">
+          <div>
+            <span class="eyebrow">LATEST NEWS</span>
+            <h2 class="section-title">최신 보안 뉴스</h2>
+          </div>
+          <a class="more-link" href="news.html">
+            뉴스 더 보기
+            <svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+          </a>
+        </div>
+        <p class="news-status" id="home-news-status" aria-live="polite"></p>
+        <div class="news-grid" id="home-news"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
     <div class="container dotted">
-      © 2026 물리보안 담당자 소개 페이지
+      <span>© 2026 물리보안 담당자</span>
+      <span>뉴스 제공: <a href="https://newsapi.org" target="_blank" rel="noopener noreferrer">NewsAPI.org</a></span>
     </div>
   </footer>
 
+  <script src="js/auth.js"></script>
+  <script src="js/news-ui.js"></script>
   <script>
-    // ===== 카카오 로그인 화면 표시 =====
-    (function () {
-      const box = document.getElementById('auth');
-
-      // 로그인 중 문제가 생기면 서버가 주소 뒤에 ?login_error=종류 를 붙여 돌려보내요
-      const ERROR_TEXT = {
-        denied: '카카오 로그인을 취소했어요.',
-        state: '로그인 요청이 올바르지 않아요. 다시 시도해 주세요.',
-        token: '카카오 인증에 실패했어요. 키와 Redirect URI 설정을 확인해 주세요.',
-        profile: '카카오에서 사용자 정보를 받지 못했어요.',
-        config: '서버 설정(환경 변수)이 비어 있어요.',
-        kakao: '카카오 로그인 중 오류가 났어요.',
-        server: '서버에서 오류가 났어요. 잠시 후 다시 시도해 주세요.',
-      };
-
-      const params = new URLSearchParams(location.search);
-      const errorCode = params.get('login_error');
-      if (errorCode) {
-        // 새로고침해도 오류가 다시 뜨지 않게 주소에서 지워요
-        history.replaceState(null, '', location.pathname + location.hash);
-      }
-
-      // 화면에 글자를 넣을 때는 textContent만 써서, 닉네임에 이상한 코드가 있어도 실행되지 않게 해요
-      function el(tag, props) {
-        const node = document.createElement(tag);
-        Object.assign(node, props || {});
-        return node;
-      }
-
-      function showMessage(text) {
-        if (text) box.append(el('p', { className: 'auth-message', textContent: text }));
-      }
-
-      function renderLoggedOut() {
-        const link = el('a', { className: 'btn-kakao', href: '/.netlify/functions/kakao-login' });
-        link.innerHTML =
-          '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C6.48 3 2 6.58 2 11c0 2.84 1.86 5.33 4.66 6.75l-.95 3.48c-.08.3.26.54.52.37l4.15-2.75c.53.06 1.07.09 1.62.09 5.52 0 10-3.58 10-8S17.52 3 12 3z"/></svg>';
-        link.append('카카오 로그인');
-        box.append(link);
-      }
-
-      function renderLoggedIn(user) {
-        const who = el('div', { className: 'auth-user' });
-        if (user.profileImage) {
-          who.append(el('img', { className: 'auth-avatar', src: user.profileImage, alt: '', referrerPolicy: 'no-referrer' }));
-        }
-        who.append(el('span', { textContent: user.nickname + '님' }));
-
-        const form = el('form', { method: 'post', action: '/.netlify/functions/logout' });
-        form.append(el('button', { type: 'submit', className: 'btn-logout', textContent: '로그아웃' }));
-
-        box.append(who, form);
-      }
-
-      fetch('/.netlify/functions/me', { cache: 'no-store', credentials: 'same-origin' })
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-          box.replaceChildren();
-          if (data.error === 'config') showMessage(ERROR_TEXT.config);
-          else showMessage(ERROR_TEXT[errorCode] || (errorCode ? '로그인 중 오류가 났어요.' : ''));
-          if (data.loggedIn) renderLoggedIn(data.user);
-          else renderLoggedOut();
-        })
-        .catch(function () {
-          // 파일을 더블클릭해서 열었을 때처럼 서버 없이 볼 때
-          box.replaceChildren();
-          showMessage('로그인 기능은 서버를 실행했을 때만 쓸 수 있어요.');
-          renderLoggedOut();
-        });
-    })();
+    // 홈 화면에는 최신 "보안" 뉴스 3개만 보여 줘요
+    NewsUI.load({ q: '보안' }, {
+      grid: document.getElementById('home-news'),
+      status: document.getElementById('home-news-status'),
+      limit: 3,
+    });
   </script>
 
 </body>

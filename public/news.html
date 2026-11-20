@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>뉴스 | 물리보안 담당</title>
+
+  <!-- 글꼴: Inter Tight(영문·숫자) + Noto Sans KR(한글) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- 모든 페이지가 함께 쓰는 디자인 -->
+  <link rel="stylesheet" href="css/common.css">
+
+  <style>
+    /* ===== 제목 영역 ===== */
+    .news-hero {
+      position: relative;
+      overflow: hidden;
+      padding: 72px 0 56px;
+      background: var(--color-jobs-3);
+    }
+    /* 오른쪽 위 장식 원 */
+    .news-hero::after {
+      content: "";
+      position: absolute;
+      right: -120px;
+      top: -160px;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: rgba(var(--color-white-rgb), 0.35);
+      pointer-events: none;
+    }
+    .news-hero .container { position: relative; z-index: 1; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 34px;
+      padding: 0 14px;
+      border-radius: 72px;
+      background: var(--color-primary);
+      color: var(--color-white);
+      font-weight: var(--font-bold);
+      letter-spacing: 1px;
+      margin-bottom: 22px;
+    }
+    .news-hero h1 {
+      font-size: clamp(34px, 5.4vw, 58px);
+      font-weight: var(--font-bold);
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+    }
+    .news-hero h1 em { font-style: normal; color: var(--color-awards); }
+    .news-hero p { font-size: var(--text-size-medium); max-width: 600px; }
+
+    /* ===== 주제 버튼 + 검색창 ===== */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      padding: 28px 0;
+      margin-bottom: 28px;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      height: 38px;
+      padding: 0 18px;
+      border: var(--border-thin) solid rgba(var(--color-primary-rgb), 0.3);
+      border-radius: 72px;
+      background: var(--bg-white);
+      color: var(--color-primary);
+      font: inherit;
+      font-weight: var(--font-medium);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s var(--ease);
+    }
+    .chip:hover { background: var(--bg-3rd); }
+    .chip:active { transform: scale(0.96); }
+    .chip[aria-pressed="true"] {
+      background: var(--color-awards);
+      border-color: var(--color-awards);
+      color: var(--color-white);
+    }
+    .search {
+      position: relative;
+      display: flex;
+      margin-left: auto;
+      flex: 1 1 260px;
+      max-width: 400px;
+    }
+    .search .hi {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: rgba(var(--color-primary-rgb), 0.5);
+      pointer-events: none;
+    }
+    .search input {
+      flex: 1;
+      min-width: 0;
+      height: 46px;
+      padding: 0 92px 0 44px;
+      border: var(--border-thin) solid rgba(var(--color-primary-rgb), 0.3);
+      border-radius: 72px;
+      background: var(--bg-white);
+      font: inherit;
+      color: inherit;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .search input:focus {
+      outline: none;
+      border-color: var(--color-awards);
+      box-shadow: 0 0 0 4px rgba(80, 43, 216, 0.15);
+    }
+    .search button {
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      height: 38px;
+      padding: 0 18px;
+      border: 0;
+      border-radius: 72px;
+      background: var(--color-primary);
+      color: var(--color-white);
+      font: inherit;
+      font-weight: var(--font-bold);
+      cursor: pointer;
+    }
+    .search button:hover { background: #000; }
+    @media (max-width: 760px) {
+      .search { margin-left: 0; max-width: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 맨 위 메뉴 (모든 페이지 공통) -->
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="./" aria-label="홈으로">
+        <span class="brand-mark" aria-hidden="true"><svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg></span>
+        <span class="brand-text">물리보안 담당</span>
+      </a>
+      <nav class="site-nav" aria-label="사이트 메뉴">
+        <a class="nav-link" href="./">홈</a>
+        <a class="nav-link" href="about.html">소개</a>
+        <a class="nav-link" href="news.html" aria-current="page">뉴스</a>
+        <a class="nav-link" href="region.html">지역</a>
+        <a class="nav-link" href="chat.html">챗봇</a>
+      </nav>
+      <div class="auth-inner" id="auth" aria-live="polite"></div>
+    </div>
+  </header>
+
+  <header class="news-hero">
+    <div class="container">
+      <div class="badge">NEWS</div>
+      <h1>오늘의 <em>보안</em> 뉴스</h1>
+      <p>주제를 고르거나 검색어를 입력하세요. 카드를 누르면 기사 요약을 미리 볼 수 있어요.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="controls dotted">
+      <div class="chips" id="chips">
+        <button type="button" class="chip" data-q="보안">보안</button>
+        <button type="button" class="chip" data-q="CCTV">CCTV</button>
+        <button type="button" class="chip" data-q="출입통제">출입통제</button>
+        <button type="button" class="chip" data-q="개인정보">개인정보</button>
+        <button type="button" class="chip" data-top="us">미국 주요 뉴스</button>
+      </div>
+      <form class="search" id="search" role="search">
+        <svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+        <input type="search" name="q" maxlength="100" placeholder="검색어 입력 (예: 물리보안)" aria-label="뉴스 검색어">
+        <button type="submit">검색</button>
+      </form>
+    </div>
+
+    <p class="news-status" id="status" aria-live="polite"></p>
+    <div class="news-grid" id="cards"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container dotted">
+      <span>© 2026 물리보안 담당자</span>
+      <span>뉴스 제공: <a href="https://newsapi.org" target="_blank" rel="noopener noreferrer">NewsAPI.org</a></span>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+  <script src="js/news-ui.js"></script>
+  <script>
+    (function () {
+      const grid = document.getElementById('cards');
+      const status = document.getElementById('status');
+      const chips = document.querySelectorAll('.chip');
+      const form = document.getElementById('search');
+
+      function setActive(key) {
+        chips.forEach(function (c) {
+          c.setAttribute('aria-pressed', String((c.dataset.q || 'top:' + c.dataset.top) === key));
+        });
+      }
+
+      function load(params, label) {
+        NewsUI.load(params, { grid: grid, status: status, label: label });
+      }
+
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          form.q.value = '';
+          if (chip.dataset.top) {
+            setActive('top:' + chip.dataset.top);
+            load({ top: chip.dataset.top }, chip.textContent);
+          } else {
+            setActive(chip.dataset.q);
+            load({ q: chip.dataset.q }, chip.dataset.q);
+          }
+        });
+      });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const q = form.q.value.trim();
+        if (!q) { form.q.focus(); return; }
+        setActive(q);
+        load({ q: q }, q);
+      });
+
+      // 처음 열면 "보안" 뉴스부터 보여 줘요
+      setActive('보안');
+      load({ q: '보안' }, '보안');
+    })();
+  </script>
+
+</body>
+</html>
