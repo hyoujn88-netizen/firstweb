@@ -392,6 +392,134 @@
     }
     .cast b { display: block; font-weight: var(--font-bold); }
     .cast small { color: var(--cinema-sub); }
+
+    /* 배우 버튼 (누르면 배우 정보) */
+    .cast-btn, .film-btn {
+      all: unset;
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+      padding: 8px 4px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cast-btn:hover, .film-btn:hover { background: rgba(255, 255, 255, 0.07); }
+    .cast-btn:disabled { cursor: default; background: none; }
+    .cast-btn:disabled img, .cast-btn:disabled .no-photo { transform: none !important; box-shadow: none !important; }
+    .cast-btn:focus-visible, .film-btn:focus-visible { outline: 2px solid var(--color-orange); outline-offset: 2px; }
+    .cast-btn img, .cast-btn .no-photo { transition: transform 0.25s var(--ease), box-shadow 0.25s; }
+    .cast-btn:hover img, .cast-btn:hover .no-photo { transform: scale(1.06); box-shadow: 0 0 0 2px var(--color-orange); }
+
+    /* ===== 배우 화면 ===== */
+    .person-hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 24px;
+      align-items: end;
+      padding: 56px 32px 8px;
+      overflow: hidden;
+    }
+    /* 배우 사진을 흐리게 깔아 배경으로 */
+    .person-hero::before {
+      content: "";
+      position: absolute;
+      inset: -40px;
+      background: var(--person-bg, none) center 20% / cover;
+      filter: blur(40px) saturate(1.3);
+      opacity: 0.35;
+    }
+    .person-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, var(--cinema-card), transparent 70%);
+    }
+    .person-hero > * { position: relative; z-index: 1; }
+    .person-photo {
+      width: 150px;
+      aspect-ratio: 2 / 3;
+      border-radius: 14px;
+      object-fit: cover;
+      background: #2a2a33;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    .person-photo.no-photo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: var(--font-bold);
+      color: var(--cinema-sub);
+    }
+    .person-name { font-size: clamp(24px, 3.6vw, 34px); font-weight: var(--font-extrabold); line-height: 1.2; letter-spacing: -0.02em; }
+    .person-info .orig { color: var(--cinema-sub); margin-top: 2px; }
+    .facts { display: grid; gap: 4px; margin-top: 14px; font-size: 14px; }
+    .facts div { display: flex; gap: 12px; }
+    .facts dt { flex-shrink: 0; width: 64px; color: var(--cinema-sub); }
+    .facts dd { overflow-wrap: anywhere; }
+    .bio-note { font-size: 13px; color: var(--cinema-sub); margin-bottom: 6px; }
+    .bio { white-space: pre-line; }
+    .bio.clamped {
+      display: -webkit-box;
+      -webkit-line-clamp: 6;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .translate-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 14px; }
+    .translate-btn { height: 42px; font-size: 14px; }
+    .translate-btn:disabled { opacity: 0.6; cursor: progress; }
+    .translate-status { font-size: 13px; color: var(--cinema-sub); }
+    .translate-status.error { color: var(--color-connect-3); }
+    .translate-status.loading::after { content: ""; display: inline-block; width: 12px; height: 12px; margin-left: 8px; vertical-align: -2px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .translate-btn .hi { font-size: 17px; }
+    .more-btn {
+      display: block;
+      margin-top: 6px;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--color-orange);
+      font: inherit;
+      font-weight: var(--font-bold);
+      cursor: pointer;
+    }
+    .films {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 8px;
+      list-style: none;
+    }
+    .film-poster {
+      position: relative;
+      display: block;
+      aspect-ratio: 2 / 3;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #2a2a33;
+      margin-bottom: 8px;
+    }
+    .film-poster img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s var(--ease); }
+    .film-btn:hover .film-poster img { transform: scale(1.06); }
+    .film-poster .poster-none { font-size: 12px; }
+    .film-btn b {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-size: 13px;
+      font-weight: var(--font-bold);
+      line-height: 1.4;
+    }
+    .film-btn small { display: block; font-size: 12px; color: var(--cinema-sub); line-height: 1.4; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .movie-modal .modal-actions .btn-ghost[hidden], .movie-modal [hidden] { display: none !important; }
+    @media (max-width: 560px) {
+      .person-hero { grid-template-columns: 100px minmax(0, 1fr); gap: 16px; padding: 48px 20px 4px; }
+      .person-photo { width: 100px; }
+      .films { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
     .movie-modal .modal-actions { background: var(--cinema-card); border-top-color: var(--cinema-line); }
     .movie-modal .modal-actions .btn-primary { margin-left: 0; }
     .movie-modal .modal-actions .btn-ghost { color: var(--cinema-text); }
@@ -499,6 +627,7 @@
         info: '<svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>',
         prev: '<svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>',
         next: '<svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>',
+        translate: '<svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802"/></svg>',
         external: '<svg class="hi" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/></svg>',
       };
 
@@ -526,6 +655,8 @@
         b.append(text);
         return b;
       }
+      // 데이터 모양이 바뀌면 이 숫자를 올려요. 그러면 브라우저에 저장된 옛날 정보 대신 새 정보를 받아요.
+      const DATA_VERSION = 2;
       const stars = (r) => (r === null || r === undefined ? '' : '★ ' + r.toFixed(1));
 
       // ===== 1. 큰 화면 (1~5위) =====
@@ -672,8 +803,11 @@
       }
 
       // ===== 4. 자세히 보기 창 =====
-      let modal = null, ui = {}, list = [], index = 0, lastFocus = null, detailNo = 0;
-      const detailCache = new Map();
+      // 영화 → 배우 → 그 배우의 다른 영화 … 이렇게 이어서 볼 수 있어요. "뒤로" 버튼으로 돌아가요.
+      let modal = null, ui = {}, list = [], index = 0, lastFocus = null, loadNo = 0;
+      let stack = [];   // 들어온 화면 순서: { type: 'movie', base } 또는 { type: 'person', id, name }
+      const movieCache = new Map();
+      const personCache = new Map();
 
       function buildModal() {
         modal = el('dialog', 'news-modal movie-modal');
@@ -687,6 +821,7 @@
         scroll.append(content);
 
         const actions = el('div', 'modal-actions');
+        const back = btnWithIcon('btn btn-ghost', ICON.prev, '뒤로');
         const trailer = btnWithIcon('btn btn-primary', ICON.play, '예고편 보기');
         const tmdbLink = el('a', 'btn btn-ghost', 'TMDB에서 보기 ');
         tmdbLink.target = '_blank';
@@ -696,81 +831,168 @@
         prev.setAttribute('aria-label', '이전 영화');
         const next = btnWithIcon('modal-step', ICON.next, '');
         next.setAttribute('aria-label', '다음 영화');
-        actions.append(trailer, tmdbLink, prev, next);
+        actions.append(back, trailer, tmdbLink, prev, next);
 
         modal.append(close, scroll, actions);
         document.body.append(modal);
-        ui = { scroll: scroll, content: content, trailer: trailer, tmdbLink: tmdbLink, prev: prev, next: next };
+        ui = { scroll: scroll, content: content, back: back, trailer: trailer, tmdbLink: tmdbLink, prev: prev, next: next };
 
         close.addEventListener('click', function () { modal.close(); });
-        prev.addEventListener('click', function () { show(index - 1); });
-        next.addEventListener('click', function () { show(index + 1); });
+        back.addEventListener('click', goBack);
+        prev.addEventListener('click', function () { goRoot(index - 1); });
+        next.addEventListener('click', function () { goRoot(index + 1); });
         modal.addEventListener('click', function (e) { if (e.target === modal) modal.close(); });
         modal.addEventListener('keydown', function (e) {
           if (e.target.tagName === 'IFRAME') return;
-          if (e.key === 'ArrowLeft') { e.preventDefault(); show(index - 1); }
-          if (e.key === 'ArrowRight') { e.preventDefault(); show(index + 1); }
+          if (stack.length === 1 && e.key === 'ArrowLeft') { e.preventDefault(); goRoot(index - 1); }
+          if (stack.length === 1 && e.key === 'ArrowRight') { e.preventDefault(); goRoot(index + 1); }
+          if (stack.length > 1 && e.key === 'Backspace' && e.target.tagName !== 'INPUT') { e.preventDefault(); goBack(); }
         });
         modal.addEventListener('close', function () {
           ui.content.replaceChildren(); // 예고편 영상도 함께 멈춰요
+          stack = [];
           if (lastFocus) lastFocus.focus();
         });
       }
 
-      // 목록에 있는 정보로 먼저 그리고, 자세한 정보(감독·배우·예고편)는 받아오는 대로 채워요
-      function draw(m, d) {
+      // ----- 화면 이동 -----
+      function goRoot(i) {
+        if (i < 0 || i >= list.length) return;
+        index = i;
+        stack = [{ type: 'movie', base: list[i] }];
+        showCurrent();
+      }
+      function goMovie(film) {
+        // 인기 100편 안에 있는 영화면 순위 정보까지 함께 써요
+        const inList = all.find(function (m) { return m.id === film.id; });
+        stack.push({ type: 'movie', base: inList || film });
+        showCurrent();
+      }
+      function goPerson(id, name) {
+        stack.push({ type: 'person', id: id, name: name });
+        showCurrent();
+      }
+      function goBack() {
+        if (stack.length < 2) return;
+        stack.pop();
+        showCurrent();
+      }
+
+      function showCurrent() {
+        const v = stack[stack.length - 1];
+        const atRoot = stack.length === 1;
+        ui.back.hidden = atRoot;
+        ui.prev.hidden = ui.next.hidden = !atRoot;
+        ui.prev.disabled = index === 0;
+        ui.next.disabled = index === list.length - 1;
+        ui.trailer.hidden = true;
+        ui.scroll.scrollTop = 0;
+        const myNo = ++loadNo;
+
+        if (v.type === 'movie') {
+          const m = v.base;
+          ui.tmdbLink.href = 'https://www.themoviedb.org/movie/' + m.id;
+          const cached = movieCache.get(m.id);
+          drawMovie(m, cached || null);
+          if (cached) return focusTitle();
+          fetchJson('/.netlify/functions/movies?v=' + DATA_VERSION + '&id=' + m.id, movieCache, m.id, myNo,
+            function (d) { drawMovie(m, d); },
+            '감독·배우 정보를 불러오지 못했어요.');
+        } else {
+          ui.tmdbLink.href = 'https://www.themoviedb.org/person/' + v.id;
+          const cached = personCache.get(v.id);
+          if (cached) { drawPerson(cached); return focusTitle(); }
+          drawPersonLoading(v.name);
+          fetchJson('/.netlify/functions/movies?v=' + DATA_VERSION + '&person=' + v.id, personCache, v.id, myNo,
+            drawPerson,
+            '배우 정보를 불러오지 못했어요.');
+        }
+        focusTitle();
+      }
+
+      function fetchJson(url, cache, key, myNo, onData, failText) {
+        fetch(url)
+          .then(function (res) { return res.json(); })
+          .then(function (d) {
+            if (d.error) throw new Error(d.error);
+            cache.set(key, d);
+            if (myNo === loadNo && modal.open) onData(d);
+          })
+          .catch(function () {
+            if (myNo !== loadNo) return;
+            const loading = ui.content.querySelector('.mm-loading');
+            if (loading) loading.textContent = failText;
+          });
+      }
+
+      // 화면이 바뀌면 화면 읽기 프로그램이 새 제목부터 읽도록 제목으로 이동해요
+      function focusTitle() {
+        const h = ui.content.querySelector('#mm-title');
+        if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
+      }
+
+      // ----- 영화 화면 -----
+      function drawMovie(base, d) {
+        const m = Object.assign({}, base, d || {});
+        m.rank = base.rank;
+        if (m.rating === undefined) m.rating = null;
+
         const hero = el('div', 'modal-hero');
-        const bg = d && d.backdrop || m.backdrop;
-        if (bg) {
+        if (m.backdrop) {
           const img = el('img');
-          img.src = bg;
+          img.src = m.backdrop;
           img.alt = '';
           hero.append(img);
         }
 
         const top = el('div', 'mm-top');
         const poster = el('img', 'mm-poster');
-        poster.src = (d && d.poster) || m.poster || '';
-        poster.alt = m.title + ' 포스터';
-        if (!poster.src) poster.removeAttribute('src');
+        if (m.poster) poster.src = m.poster;
+        poster.alt = (m.title || '영화') + ' 포스터';
         const titleBox = el('div', 'mm-title');
         const h = el('h2', '', m.title);
         h.id = 'mm-title';
-        titleBox.append(el('span', 'feature-rank', '인기 ' + m.rank + '위'), h);
+        if (m.rank) titleBox.append(el('span', 'feature-rank', '인기 ' + m.rank + '위'));
+        titleBox.append(h);
         if (m.originalTitle) titleBox.append(el('p', 'orig', m.originalTitle));
         if (d && d.tagline) titleBox.append(el('p', 'tagline', d.tagline));
         top.append(poster, titleBox);
 
         const body = el('div', 'mm-body');
         const chips = el('div', 'chips');
-        if (m.rating !== null) chips.append(el('span', 'chip star-chip', stars(m.rating) + ' (' + m.votes.toLocaleString('ko-KR') + '명)'));
+        if (m.rating !== null) chips.append(el('span', 'chip star-chip', stars(m.rating) + (m.votes ? ' (' + m.votes.toLocaleString('ko-KR') + '명)' : '')));
         if (m.release) chips.append(el('span', 'chip', m.release.replace(/-/g, '.') + ' 개봉'));
         if (d && d.runtime) chips.append(el('span', 'chip', Math.floor(d.runtime / 60) + '시간 ' + (d.runtime % 60) + '분'));
-        ((d && d.genres) || m.genres).forEach(function (g) { chips.append(el('span', 'chip', g)); });
-        body.append(chips, el('p', 'mm-overview', (d && d.overview) || m.overview || '줄거리 정보가 없어요.'));
+        (m.genres || []).forEach(function (g) { chips.append(el('span', 'chip', g)); });
+        body.append(chips, el('p', 'mm-overview', m.overview || (d ? '줄거리 정보가 없어요.' : '')));
 
         if (!d) {
           body.append(el('p', 'mm-loading', '감독·배우 정보를 불러오는 중…'));
         } else {
-          if (d.director) {
-            body.append(el('h3', 'mm-label', '감독'), el('p', '', d.director));
-          }
+          if (d.director) body.append(el('h3', 'mm-label', '감독'), el('p', '', d.director));
           if (d.cast.length) {
-            body.append(el('h3', 'mm-label', '출연'));
+            body.append(el('h3', 'mm-label', '출연 배우 · 누르면 배우 정보를 볼 수 있어요'));
             const cast = el('ul', 'cast');
             d.cast.forEach(function (c) {
               const li = el('li');
+              const b = el('button', 'cast-btn');
+              b.type = 'button';
+              b.setAttribute('aria-label', c.name + (c.character ? ' (' + c.character + ' 역)' : '') + ' 배우 정보 보기');
               if (c.photo) {
                 const img = el('img');
                 img.src = c.photo;
                 img.alt = '';
                 img.loading = 'lazy';
-                li.append(img);
+                b.append(img);
               } else {
-                li.append(el('span', 'no-photo', c.name.charAt(0)));
+                b.append(el('span', 'no-photo', c.name.charAt(0)));
               }
-              li.append(el('b', '', c.name));
-              if (c.character) li.append(el('small', '', c.character));
+              b.append(el('b', '', c.name));
+              if (c.character) b.append(el('small', '', c.character));
+              // 배우 번호가 없으면(옛날 정보 등) 누를 수 없게 해요
+              if (c.id) b.addEventListener('click', function () { goPerson(c.id, c.name); });
+              else { b.disabled = true; b.removeAttribute('aria-label'); }
+              li.append(b);
               cast.append(li);
             });
             body.append(cast);
@@ -778,7 +1000,6 @@
         }
 
         ui.content.replaceChildren(hero, top, body);
-        ui.hero = hero;
 
         // 예고편 버튼: 누르면 위쪽 큰 그림 자리에서 바로 재생
         ui.trailer.hidden = !(d && d.trailer);
@@ -789,38 +1010,176 @@
           frame.title = m.title + ' 예고편';
           frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
           frame.allowFullscreen = true;
-          ui.hero.append(frame);
+          hero.append(frame);
           ui.scroll.scrollTop = 0;
           ui.trailer.hidden = true;
         };
       }
 
-      function show(i) {
-        if (i < 0 || i >= list.length) return;
-        index = i;
-        const m = list[i];
-        ui.tmdbLink.href = 'https://www.themoviedb.org/movie/' + m.id;
-        ui.prev.disabled = i === 0;
-        ui.next.disabled = i === list.length - 1;
-        ui.scroll.scrollTop = 0;
+      // ----- 배우 화면 -----
+      function drawPersonLoading(name) {
+        const head = el('div', 'person-hero');
+        const h = el('h2', 'person-name', name);
+        h.id = 'mm-title';
+        head.append(el('div', 'person-photo'), h);
+        ui.content.replaceChildren(head, el('p', 'mm-loading', '배우 정보를 불러오는 중…'));
+      }
 
-        const cached = detailCache.get(m.id);
-        draw(m, cached || null);
-        if (cached) return;
+      // ----- 영어 소개 → 한국어 번역 (이 창 안에서 바로 바꿔 보여 줘요) -----
+      const TRANSLATE_ERROR = {
+        login: '번역은 카카오로 로그인한 분만 쓸 수 있어요. 오른쪽 위에서 로그인해 주세요.',
+        config: '서버 설정(CLAUDE_API_KEY)이 비어 있어요.',
+        key: 'Claude API 키가 올바르지 않아요.',
+        limit: '번역 요청이 너무 많아요. 잠시 후 다시 시도해 주세요.',
+        refusal: '이 소개글은 번역할 수 없어요.',
+        offline: '번역은 서버를 실행했을 때만 쓸 수 있어요.',
+      };
 
-        const myNo = ++detailNo;
-        fetch('/.netlify/functions/movies?id=' + m.id)
-          .then(function (res) { return res.json(); })
-          .then(function (d) {
-            if (d.error) throw new Error(d.error);
-            detailCache.set(m.id, d);
-            if (myNo === detailNo && modal.open) draw(m, d);
-          })
-          .catch(function () {
-            if (myNo !== detailNo) return;
-            const loading = ui.content.querySelector('.mm-loading');
-            if (loading) loading.textContent = '자세한 정보를 불러오지 못했어요.';
+      function translateButton(p, bio, note) {
+        const wrap = el('div', 'translate-row');
+        const btn = btnWithIcon('btn btn-glass translate-btn', ICON.translate, '한국어로 번역');
+        const status = el('span', 'translate-status');
+        status.setAttribute('aria-live', 'polite');
+        wrap.append(btn, status);
+
+        function showKo() {
+          bio.textContent = p.ko;
+          bio.lang = 'ko';
+          note.textContent = 'Claude(AI)가 번역한 글이에요. 어색하거나 틀린 부분이 있을 수 있어요.';
+          btn.replaceChildren();
+          btn.innerHTML = ICON.translate;
+          btn.append('영어 원문 보기');
+          p.showKo = true;
+        }
+        function showEn() {
+          bio.textContent = p.biography;
+          bio.lang = 'en';
+          note.textContent = '한국어 소개가 없어서 영어 소개를 보여 드려요.';
+          btn.replaceChildren();
+          btn.innerHTML = ICON.translate;
+          btn.append('한국어로 번역');
+          p.showKo = false;
+        }
+
+        btn.addEventListener('click', function () {
+          if (p.ko) { return p.showKo ? showEn() : showKo(); } // 이미 번역했으면 바꿔 보기만
+          btn.disabled = true;
+          status.className = 'translate-status loading';
+          status.textContent = '번역하는 중…';
+          fetch('/.netlify/functions/bio-ko?v=' + DATA_VERSION + '&person=' + p.id, { credentials: 'same-origin' })
+            .then(function (res) { return res.json(); })
+            .then(function (d) {
+              if (d.error) throw new Error(d.error);
+              p.ko = d.text;        // 같은 배우를 다시 열어도 다시 번역하지 않게 기억해요
+              status.textContent = '';
+              status.className = 'translate-status';
+              showKo();
+            })
+            .catch(function (e) {
+              status.className = 'translate-status error';
+              // 서버가 알려 준 오류 → 정해 둔 안내 / 서버에 연결 자체가 안 됨(TypeError) → 서버 꺼짐 안내
+              status.textContent = TRANSLATE_ERROR[e.message]
+                || (e instanceof TypeError ? TRANSLATE_ERROR.offline : '번역하지 못했어요. 잠시 후 다시 시도해 주세요.');
+            })
+            .finally(function () { btn.disabled = false; });
+        });
+
+        if (p.ko && p.showKo) showKo(); // 뒤로 돌아왔을 때 보던 상태 그대로
+        return wrap;
+      }
+
+      function fmtDate(s) { return s ? s.replace(/-/g, '.') : ''; }
+
+      function drawPerson(p) {
+        const head = el('div', 'person-hero');
+        if (p.photo) {
+          head.style.setProperty('--person-bg', 'url("' + p.photo + '")');
+          const img = el('img', 'person-photo');
+          img.src = p.photo;
+          img.alt = p.name + ' 사진';
+          head.append(img);
+        } else {
+          head.append(el('div', 'person-photo no-photo', p.name.charAt(0)));
+        }
+
+        const info = el('div', 'person-info');
+        if (p.job) info.append(el('span', 'feature-rank', p.job));
+        const h = el('h2', 'person-name', p.name);
+        h.id = 'mm-title';
+        info.append(h);
+        if (p.englishName) info.append(el('p', 'orig', p.englishName));
+
+        const facts = el('dl', 'facts');
+        function fact(label, value) {
+          if (!value) return;
+          const row = el('div');
+          row.append(el('dt', '', label), el('dd', '', value));
+          facts.append(row);
+        }
+        fact('생년월일', p.birthday ? fmtDate(p.birthday) + (p.age !== null && !p.deathday ? ' (' + p.age + '세)' : '') : '');
+        fact('사망', p.deathday ? fmtDate(p.deathday) + (p.age !== null ? ' (향년 ' + p.age + '세)' : '') : '');
+        fact('출생지', p.birthplace);
+        fact('영화 출연', p.movieCount ? p.movieCount + '편' : '');
+        info.append(facts);
+        head.append(info);
+
+        const body = el('div', 'mm-body');
+        body.append(el('h3', 'mm-label', '소개'));
+        if (p.biography) {
+          const note = el('p', 'bio-note', '한국어 소개가 없어서 영어 소개를 보여 드려요.');
+          if (p.biographyLang === 'en') body.append(note);
+          const bio = el('p', 'mm-overview bio', p.biography);
+          if (p.biographyLang === 'en') bio.lang = 'en';
+          body.append(bio);
+          if (p.biography.length > 320) {
+            bio.classList.add('clamped');
+            const more = el('button', 'more-btn', '더 보기');
+            more.type = 'button';
+            more.setAttribute('aria-expanded', 'false');
+            more.addEventListener('click', function () {
+              const open = bio.classList.toggle('clamped') === false;
+              more.textContent = open ? '접기' : '더 보기';
+              more.setAttribute('aria-expanded', String(open));
+            });
+            body.append(more);
+          }
+          // 영어 소개면: 누르면 이 창 안에서 한국어로 바꿔 보여 주는 번역 버튼
+          if (p.biographyLang === 'en') body.append(translateButton(p, bio, note));
+        } else {
+          body.append(el('p', 'mm-overview', '소개 정보가 없어요.'));
+        }
+
+        if (p.movies.length) {
+          body.append(el('h3', 'mm-label', '대표 출연작 · 누르면 영화 정보를 볼 수 있어요'));
+          const films = el('ul', 'films');
+          p.movies.forEach(function (f) {
+            const li = el('li');
+            const b = el('button', 'film-btn');
+            b.type = 'button';
+            b.setAttribute('aria-label', f.title + (f.year ? ' (' + f.year + ')' : '') + ' 영화 정보 보기');
+            const box = el('span', 'film-poster');
+            if (f.poster) {
+              const img = el('img');
+              img.src = f.poster;
+              img.alt = '';
+              img.loading = 'lazy';
+              box.append(img);
+            } else {
+              box.append(el('span', 'poster-none', f.title));
+            }
+            b.append(box, el('b', '', f.title));
+            const sub = [f.year, f.character ? f.character + ' 역' : ''].filter(Boolean).join(' · ');
+            if (sub) b.append(el('small', '', sub));
+            b.addEventListener('click', function () {
+              goMovie({ id: f.id, title: f.title, poster: f.poster, year: f.year, release: f.release, rating: f.rating, genres: [], votes: 0, overview: '', originalTitle: '' });
+            });
+            li.append(b);
+            films.append(li);
           });
+          body.append(films);
+        }
+
+        ui.content.replaceChildren(head, body);
       }
 
       function openMovie(i, from, opener) {
@@ -828,7 +1187,7 @@
         list = from;
         lastFocus = opener || null;
         if (!modal.open) modal.showModal();
-        show(i);
+        goRoot(i);
       }
 
       // ===== 시작 =====
@@ -840,7 +1199,7 @@
         timer = setTimeout(render, 150);
       });
 
-      fetch('/.netlify/functions/movies')
+      fetch('/.netlify/functions/movies?v=' + DATA_VERSION)
         .then(function (res) { return res.json(); })
         .then(function (data) {
           if (data.error) return showError(data.error);

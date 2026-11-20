@@ -90,7 +90,8 @@ async function detail(id, token) {
   }, token);
 
   const director = (m.credits?.crew || []).find((c) => c.job === 'Director');
-  const cast = (m.credits?.cast || []).slice(0, 6).map((c) => ({
+  const cast = (m.credits?.cast || []).slice(0, 10).map((c) => ({
+    id: c.id,
     name: c.name,
     character: c.character || '',
     photo: img(c.profile_path, 'w185'),
@@ -120,6 +121,61 @@ async function detail(id, token) {
   };
 }
 
+// ===== 배우 1명 자세히 =====
+const DEPARTMENT = { Acting: '배우', Directing: '감독', Writing: '각본', Production: '제작', Sound: '음악', Camera: '촬영', Editing: '편집' };
+
+function age(birthday, deathday) {
+  if (!birthday) return null;
+  const b = new Date(birthday);
+  const end = deathday ? new Date(deathday) : new Date();
+  let a = end.getFullYear() - b.getFullYear();
+  if (end.getMonth() < b.getMonth() || (end.getMonth() === b.getMonth() && end.getDate() < b.getDate())) a--;
+  return a;
+}
+
+async function person(id, token) {
+  // 한국어 정보 + 영어 정보(영어 이름, 한국어 소개가 없을 때 대신 보여 줄 영어 소개)를 함께 받아요
+  const [ko, en] = await Promise.all([
+    tmdb(`/person/${id}`, { language: 'ko-KR', append_to_response: 'movie_credits' }, token),
+    tmdb(`/person/${id}`, { language: 'en-US' }, token),
+  ]);
+
+  // 출연작: 같은 영화가 여러 번(다른 배역) 나오면 한 번만, 인기 많은 순으로 12편
+  const seen = new Set();
+  const movies = (ko.movie_credits?.cast || [])
+    .filter((c) => !c.adult && !seen.has(c.id) && seen.add(c.id))
+    .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
+    .slice(0, 12)
+    .map((c) => ({
+      id: c.id,
+      title: c.title,
+      character: c.character || '',
+      year: year(c.release_date),
+      release: c.release_date || '',
+      rating: rating(c),
+      poster: img(c.poster_path, 'w185'),
+    }));
+
+  // 소개글 속 *영화 제목* 같은 별표 꾸밈 기호는 빼고 글자만 남겨요
+  const plain = (s) => (s || '').replace(/\*{1,2}([^*\n]+)\*{1,2}/g, '$1').trim();
+  const bioKo = plain(ko.biography);
+  return {
+    id: ko.id,
+    name: ko.name,
+    englishName: en.name && en.name !== ko.name ? en.name : '',
+    photo: img(ko.profile_path, 'w342'),
+    job: DEPARTMENT[ko.known_for_department] || ko.known_for_department || '',
+    birthday: ko.birthday || '',
+    deathday: ko.deathday || '',
+    age: age(ko.birthday, ko.deathday),
+    birthplace: ko.place_of_birth || '',
+    biography: bioKo || plain(en.biography),
+    biographyLang: bioKo ? 'ko' : (en.biography ? 'en' : ''),
+    movieCount: seen.size,
+    movies,
+  };
+}
+
 export default async (req) => {
   let token;
   try {
@@ -129,8 +185,14 @@ export default async (req) => {
     return json({ error: 'config' }, 500);
   }
 
-  const idParam = new URL(req.url).searchParams.get('id');
+  const params = new URL(req.url).searchParams;
+  const idParam = params.get('id');
+  const personParam = params.get('person');
   try {
+    if (personParam !== null) {
+      if (!/^\d{1,9}$/.test(personParam)) return json({ error: 'bad' }, 400);
+      return json(await person(personParam, token), 200, 86400); // 배우 정보는 하루 동안 다시 써요
+    }
     if (idParam !== null) {
       if (!/^\d{1,9}$/.test(idParam)) return json({ error: 'bad' }, 400);
       return json(await detail(idParam, token), 200, 86400); // 영화 정보는 하루 동안 다시 써요
